@@ -1,20 +1,32 @@
-name: Add comment
+name: Add comment to pull request
 on:
   push:
     paths:
       - '**.js'
+
 jobs:
   add-frontend-rule-comment:
     runs-on: ubuntu-22.04
-    permissions:
-      pull-requests: write
+    # permissions:
+    #   pull-requests: write
     steps:
-      - name: Add comment
+      - uses: actions/checkout@v1
+      # Find the PR associated with this push, if there is one.
+      - uses: jwalton/gh-find-current-pr@v1
+        id: findPr
+        with:
+          # Can be "open", "closed", or "all".  Defaults to "open".
+          state: open
+      # This will echo "Your PR is 7", or be skipped if there is no current PR.
+      - run: echo "Your PR is ${PR}"
+        if: success() && steps.findPr.outputs.number
+        env:
+          PR: ${{ steps.findPr.outputs.pr }}
+      - run: echo "steps.findPr.outputs.pr ${{steps.findPr.outputs.pr}}"
+      - name: Create comment
         uses: peter-evans/create-or-update-comment@v2
         with:
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ steps.findPr.outputs.pr }}
           body: |
-            フロントエンドコード規約
-            - [ ] A
-            - [ ] B
-            - [ ] C
+            ## フロントエンド規約
+            - [ ] test
