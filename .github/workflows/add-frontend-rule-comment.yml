@@ -1,0 +1,20 @@
+name: Add comment
+on:
+  push:
+    paths:
+      - '**.js'
+jobs:
+  add-frontend-rule-comment:
+    runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Add comment
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            フロントエンドコード規約
+            - [ ] A
+            - [ ] B
+            - [ ] C
