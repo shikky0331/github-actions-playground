@@ -18,12 +18,20 @@ jobs:
           # Can be "open", "closed", or "all".  Defaults to "open".
           state: open
       # This will echo "Your PR is 7", or be skipped if there is no current PR.
-      - run: echo "Your PR is ${PR}"
-        if: success() && steps.findPr.outputs.number
-        env:
-          PR: ${{ steps.findPr.outputs.pr }}
-      - run: echo "steps.findPr.outputs.pr ${{steps.findPr.outputs.pr}}"
+      # - run: echo "Your PR is ${PR}"
+      #   if: success() && steps.findPr.outputs.number
+      #   env:
+      #     PR: ${{ steps.findPr.outputs.pr }}
+      # - run: echo "steps.findPr.outputs.pr ${{steps.findPr.outputs.pr}}"
+      - name: Find Comment
+        uses: peter-evans/find-comment@v2
+        id: fc
+        with:
+          issue-number: ${{ steps.findPr.outputs.pr }}
+          comment-author: 'github-actions[bot]'
+          body-includes: フロントエンド規約
       - name: Create comment
+        if: steps.fc.outputs.comment-id == ''
         uses: peter-evans/create-or-update-comment@v2
         with:
           issue-number: ${{ steps.findPr.outputs.pr }}
