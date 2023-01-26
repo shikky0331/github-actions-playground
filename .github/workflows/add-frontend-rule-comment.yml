@@ -1,11 +1,8 @@
 name: Add comment to pull request
 on:
-  push:
+  pull_request:
     paths:
       - '**.js'
-  pull_request:
-    types:
-      - opened
 
 jobs:
   add-frontend-rule-comment:
