@@ -1,6 +1,8 @@
 name: Add comment to pull request
 on:
   pull_request:
+    types:
+      - opened
     paths:
       - '**.js'
 
