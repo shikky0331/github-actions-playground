@@ -3,6 +3,11 @@ on:
   push:
     paths:
       - '**.js'
+  pull_request:
+    types:
+      - opened
+    paths:
+      - '**.js'
 
 jobs:
   add-frontend-rule-comment:
@@ -15,6 +20,7 @@ jobs:
         with:
           state: open
       - name: Find Comment
+        if: steps.findPr.outputs.pr
         uses: peter-evans/find-comment@v2
         id: fc
         with:
@@ -22,7 +28,7 @@ jobs:
           comment-author: 'github-actions[bot]'
           body-includes: フロントエンド規約
       - name: Create comment
-        if: steps.fc.outputs.comment-id == ''
+        if: steps.findPr.outputs.pr && steps.fc.outputs.comment-id == ''
         uses: peter-evans/create-or-update-comment@v2
         with:
           issue-number: ${{ steps.findPr.outputs.pr }}
