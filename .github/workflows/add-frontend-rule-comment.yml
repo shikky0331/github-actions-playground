@@ -3,6 +3,9 @@ on:
   push:
     paths:
       - '**.js'
+  pull_request:
+    types:
+      - opened
 
 jobs:
   add-frontend-rule-comment:
